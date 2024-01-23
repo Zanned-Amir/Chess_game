@@ -59,10 +59,10 @@ describe Board do
         
     end
     describe "valide_move_bishop" do
-        it "returns [[3,1],[4,2],[5,3],[6,4]] for [2,2]" do
+        it "returns [[3, 1], [4, 2], [5, 3], [6, 4]] for [2,0]" do
             board = Board.new
-            board.grid[2][2] = "\u2657"
-            expect(board.valide_move_bishop([2,2])).to eql([[3,1],[4,2],[5,3],[6,4]])
+            board.grid[2][0] = "\u2657"
+            expect(board.valide_move_bishop([2,0])).to eql([[3, 1], [4, 2], [5, 3], [6, 4]])
         end
     end
 end

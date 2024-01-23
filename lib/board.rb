@@ -198,81 +198,70 @@ class Board
         valide_moves = []
         row = start[0]
         col = start[1]
+    
         if valid_coordinates?(row, col) && (@grid[row][col] == "\u2657" || @grid[row][col] == "\u265D")
-            # move diagonally up-right
-            (row-1).downto(0).zip(col+1..7) do |r, c|
-                if @grid[r][c] == " "
-                    valide_moves << [r, c]
-                elsif @grid[row][col] == "\u2657" && @white_listed.include?(@grid[r][c])
-                    break
-                elsif @grid[row][col] == "\u2657" && @black_listed.include?(@grid[r][c])
-                    valide_moves << [r, c]
-                    break
-                elsif @grid[row][col] == "\u265D" && @black_listed.include?(@grid[r][c])
-                    break
-                elsif @grid[row][col] == "\u265D" && @white_listed.include?(@grid[r][c])
-                    valide_moves << [r, c]
-                    break
-                end
-            end
-            # move diagonally down-right
-            (row+1..7).zip(col+1..7) do |r, c|
-                if @grid[r][c] == " "
-                    valide_moves << [r, c]
-                elsif @grid[row][col] == "\u2657" && @white_listed.include?(@grid[r][c])
-                    break
-                elsif @grid[row][col] == "\u2657" && @black_listed.include?(@grid[r][c])
-                    valide_moves << [r, c]
-                    break
-                elsif @grid[row][col] == "\u265D" && @black_listed.include?(@grid[r][c])
-                    break
-                elsif @grid[row][col] == "\u265D" && @white_listed.include?(@grid[r][c])
-                    valide_moves << [r, c]
-                    break
-                end
-            end
-            # move diagonally up-left
-            (row-1).downto(0).zip((col-1).downto(0).to_a.reverse) do |r, c|
-                if @grid[r][c] == " "
-                    valide_moves << [r, c]
-                elsif @grid[row][col] == "\u2657" && @white_listed.include?(@grid[r][c])
-                    break
-                elsif @grid[row][col] == "\u2657" && @black_listed.include?(@grid[r][c])
-                    valide_moves << [r, c]
-                    break
-                elsif @grid[row][col] == "\u265D" && @black_listed.include?(@grid[r][c])
-                    break
-                elsif @grid[row][col] == "\u265D" && @white_listed.include?(@grid[r][c])
-                    valide_moves << [r, c]
-                    break
-                end
-            end
-            # move diagonally down-left
-            range1 = (row+1..7).to_a
-            range2 = (col-1).downto(0).to_a.reverse
-            range1.take(range2.length).zip(range2) do |r, c| 
-                if @grid[r][c] == " "
-                    valide_moves << [r, c]
-                elsif @grid[row][col] == "\u2657" && @white_listed.include?(@grid[r][c])
-                    break
-                elsif @grid[row][col] == "\u2657" && @black_listed.include?(@grid[r][c])
-                    valide_moves << [r, c]
-                    break
-                elsif @grid[row][col] == "\u265D" && @black_listed.include?(@grid[r][c])
-                    break
-                elsif @grid[row][col] == "\u265D" && @white_listed.include?(@grid[r][c])
-                    valide_moves << [r, c]
-                    break
+            possible = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+    
+            possible.each do |move|
+                r = row + move[0]
+                c = col + move[1]
+    
+                loop do
+                    break unless valid_coordinates?(r, c)
+    
+                    if @grid[r][c] == " "
+                        valide_moves << [r, c]
+                    elsif @grid[row][col] == "\u2657" && @white_listed.include?(@grid[r][c])
+                        break
+                    elsif @grid[row][col] == "\u2657" && @black_listed.include?(@grid[r][c])
+                        valide_moves << [r, c]
+                        break
+                    elsif @grid[row][col] == "\u265D" && @black_listed.include?(@grid[r][c])
+                        break
+                    elsif @grid[row][col] == "\u265D" && @white_listed.include?(@grid[r][c])
+                        valide_moves << [r, c]
+                        break
+                    end
+    
+                    r += move[0]
+                    c += move[1]
                 end
             end
         end
+    
+        valide_moves
+    end  
+
+    def valide_move_queen(start)
+        return valide_move_bishop(start) + valide_move_rook(start)
+    end
+
+    def valide_move_king(start)
+        valide_moves = []
+        row = start[0]
+        col = start[1]
+        possible_moves = [
+          [row + 1, col], [row + 1, col + 1], [row + 1, col - 1],
+          [row, col + 1], [row, col - 1],
+          [row - 1, col], [row - 1, col + 1], [row - 1, col - 1]
+        ]
+      
+        if valid_coordinates?(row, col) && (@grid[row][col] == "\u2654" || @grid[row][col] == "\u265A")
+          possible_moves.each do |move|
+            r = move[0]
+            c = move[1]
+      
+            if valid_coordinates?(r, c) &&
+               (@grid[row][col] == "\u2654" && (@grid[r][c] == " " || @black_listed.include?(@grid[r][c])) ||
+                @grid[row][col] == "\u265A" && (@grid[r][c] == " " || @white_listed.include?(@grid[r][c])))
+              valide_moves << move
+            end
+          end
+        end
+      
         valide_moves
     end
-       
+      
 end
-        
-board = Board.new
-board.grid[2][0]="\u2657"
-board.display_board
-puts board.valide_move_bishop([2,0]).inspect 
+
 
