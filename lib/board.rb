@@ -1,5 +1,5 @@
 class Board
-    attr_accessor :grid
+    attr_accessor :grid, :white_listed, :black_listed
 
     def initialize
         @white_listed = ["\u2654", "\u2655", "\u2656", "\u2657", "\u2658", "\u2659"]
@@ -57,24 +57,22 @@ class Board
         valide_moves = []
         row = start[0]
         col = start[1]
-        if valid_coordinates?(row, col) && @grid[row][col] == "\u2659" || @grid[row][col] == "\u265F"
-            if @grid[row][col] == "\u2658" #white knight
-
+        if valid_coordinates?(row, col) && (@grid[row][col] == "\u2659" || @grid[row][col] == "\u265F")
+            if @grid[row][col] == "\u2659" #white pawn
                 if row == 1 
                     valide_moves << [row + 1, col] if @grid[row + 1][col] == " "
                     valide_moves << [row + 2, col] if @grid[row + 2][col] == " "
-           
-                 elsif grid[row + 1][col] ==" "
-                     valide_moves << [row + 1, col]
+                elsif @grid[row + 1][col] ==" "
+                    valide_moves << [row + 1, col]
                 end
                 valide_moves << [row + 1, col - 1]  if @black_listed.include?(@grid[row + 1][col - 1]) 
                 valide_moves << [row + 1, col + 1] if @black_listed.include?(@grid[row + 1][col + 1]) 
             end
-            if @grid[row][col] == "\u265E" #black knight
+            if @grid[row][col] == "\u265F" #black pawn
                 if row == 6 
                     valide_moves << [row - 1, col] if @grid[row - 1][col] == " "
                     valide_moves << [row - 2, col] if @grid[row - 2][col] == " "
-                elsif grid[row][col] !=" "
+                elsif @grid[row - 1][col] ==" "
                     valide_moves << [row - 1, col]
                 end
                 valide_moves << [row - 1, col - 1]  if @white_listed.include?(@grid[row - 1][col - 1]) 
@@ -120,77 +118,26 @@ class Board
         row = start[0]
         col = start[1]
         if valid_coordinates?(row, col) && (@grid[row][col] == "\u2656" || @grid[row][col] == "\u265C")
-            (row..7).each do |r|
-                if r != row
-                    if @grid[r][col] == " "
-                        valide_moves << [r, col]
-                    elsif @grid[row][col] == "\u2656" && @white_listed.include?(@grid[r][col])
-                        break
-
-                    elsif @grid[row][col] == "\u2656" && @black_listed.include?(@grid[r][col])
-                        valide_moves << [r, col]
-                        break
-                    elsif @grid[row][col] == "\u265C" && @black_listed.include?(@grid[r][col])
-                        break
-                    elsif @grid[row][col] == "\u265C" && @white_listed.include?(@grid[r][col])
-                        valide_moves << [r, col]
-                        break
-                    end
-                end
-            end
-            0.upto(row) do |r|
-                if r != row
-                    if @grid[r][col] == " "
-                        valide_moves << [r, col]
-                    elsif @grid[row][col] == "\u2656" && @white_listed.include?(@grid[r][col])
-                        break
-
-                    elsif @grid[row][col] == "\u2656" && @black_listed.include?(@grid[r][col])
-                        valide_moves << [r, col]
-                        break
-                    elsif @grid[row][col] == "\u265C" && @black_listed.include?(@grid[r][col])
-                        break
-                    elsif @grid[row][col] == "\u265C" && @white_listed.include?(@grid[r][col])
-                        valide_moves << [r, col]
-                        break
-                    end
-                end
-            end
-            (col..7).each do |c|
-                if c != col
-                    if @grid[row][c] == " "
-                        valide_moves << [row, c]
-                    elsif @grid[row][col] == "\u2656" && @white_listed.include?(@grid[row][c])
-                        break
-                    elsif @grid[row][col] == "\u2656" && @black_listed.include?(@grid[row][c])
-                        valide_moves << [row, c]
-                        break
-                    elsif @grid[row][col] == "\u265C" && @black_listed.include?(@grid[row][c])
-                        break
-                    elsif @grid[row][col] == "\u265C" && @white_listed.include?(@grid[row][c])
-                        valide_moves << [row, c]
-                        break
-                    end
-                end
-            end
+            rook_color = @grid[row][col] == "\u2656" ? "white" : "black"
+            opponent_list = rook_color == "white" ? @black_listed : @white_listed
+            own_list = rook_color == "white" ? @white_listed : @black_listed
+    
             
-            0.upto(col) do |c|
-                if c != col
-                    if @grid[row][c] == " "
-                        valide_moves << [row, c]
-                    elsif @grid[row][col] == "\u2656" && @white_listed.include?(@grid[row][c])
+            [[-1, 0], [1, 0], [0, -1], [0, 1]].each do |dx, dy|
+                r, c = row + dx, col + dy
+                while valid_coordinates?(r, c)
+                    if @grid[r][c] == " "
+                        valide_moves << [r, c]
+                    elsif own_list.include?(@grid[r][c])
                         break
-                    elsif @grid[row][col] == "\u2656" && @black_listed.include?(@grid[row][c])
-                        valide_moves << [row, c]
-                        break
-                    elsif @grid[row][col] == "\u265C" && @black_listed.include?(@grid[row][c])
-                        break
-                    elsif @grid[row][col] == "\u265C" && @white_listed.include?(@grid[row][c])
-                        valide_moves << [row, c]
+                    elsif opponent_list.include?(@grid[r][c])
+                        valide_moves << [r, c]
                         break
                     end
+                    r += dx
+                    c += dy
                 end
-            end  
+            end
         end
         valide_moves
     end
@@ -261,7 +208,92 @@ class Board
       
         valide_moves
     end
-      
+    def find_king(color)
+        king = color == "white" ? "\u2654" : "\u265A"
+    
+        @grid.each_with_index do |row, i|
+            row.each_with_index do |cell, j|
+                return [i, j] if cell == king
+            end
+        end
+    
+        nil
+    end
+    
+    def valide_move(start)
+        valide_moves = []
+        case @grid[start[0]][start[1]]
+        when "\u2659","\u265F"
+            valide_moves = valide_move_pawnes(start)
+        when "\u2658", "\u265E"
+            valide_moves = valide_move_knight(start)
+        when "\u2656", "\u265C"
+            valide_moves = valide_move_rook(start)
+        when "\u2657", "\u265D"
+            valide_moves = valide_move_bishop(start)
+        when "\u2655", "\u265B"
+            valide_moves = valide_move_queen(start)
+        when "\u2654", "\u265A"
+            valide_moves = valide_move_king(start)
+        end
+        valide_moves
+    end
+    def all_valide_move(color)
+        valide_moves = []
+        @grid.each_with_index do |row, i|
+            row.each_with_index do |cell, j|
+                if color == "white" && @white_listed.include?(cell)
+                    valide_moves =  valide_moves + valide_move([i,j])
+                elsif color == "black" && @black_listed.include?(cell)
+                    valide_moves =  valide_moves + valide_move([i,j])
+                end
+            end
+        end
+        valide_moves
+    end
+    def checkmate?(color)
+        king = find_king(color)
+        king_moves = valide_move_king(king)
+        all_moves = []
+        king_moves << king
+        if color == "white"
+            all_moves = all_valide_move("black")
+        else
+            all_moves = all_valide_move("white")
+        end
+        return king_moves.all? { |move| all_moves.include?(move) }
+        
+    end
+
+    def check?(color)
+        king = find_king(color)
+        if color == "white"
+            all_moves = all_valide_move("black")
+        else
+            all_moves = all_valide_move("white")
+        end
+        return all_moves.include?(king)
+    end
+
+    def move(start,end_pos)
+        @grid[end_pos[0]][end_pos[1]] = @grid[start[0]][start[1]]
+        @grid[start[0]][start[1]] = " "
+    end
+    def reset_last_move(start,end_pos)
+        @grid[start[0]][start[1]] = @grid[end_pos[0]][end_pos[1]]
+        @grid[end_pos[0]][end_pos[1]] = " "
+    end
+
+
+
 end
 
+board = Board.new
+board.grid[1][0] = " "
+board.grid[6][0] = " "
+board.grid[3][0] = "\u2659"
+board.grid[4][0] = "\u265F"
+board.display_board
+
+puts board.valide_move_rook([7,0]).inspect
 

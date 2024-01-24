@@ -65,6 +65,7 @@ describe Board do
             expect(board.valide_move_bishop([2,0])).to eql([[3, 1], [4, 2], [5, 3], [6, 4]])
         end
     end
+
 end
 
 
