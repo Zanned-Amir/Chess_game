@@ -16,12 +16,12 @@ class Game
         start =[]
         valide_move =[]
         puts"welcome to chess game"
-       @board.display_board
+       @board.display_board     
        loop do
             puts" player 1  your turn color white"
             loop do
                 loop do
-                    puts "Enter the coordinates of the piece you want to move e.g 'A1' or 'exit' to quit"
+                    puts "Enter the coordinates of the piece you want to move e.g 'A1' or 'exit' to quit or 'save' to save the game"
                     input = gets.chomp
                     start = Board.convert_to_index(input)
                     valide_move = @board.valide_move(start)
@@ -43,7 +43,6 @@ class Game
                 puts "white king still in check !"
                 @board.reset_last_move(start,final)
             end
-            begin
 
             @board.display_board
 
@@ -58,7 +57,7 @@ class Game
             puts" player 2  your turn color black"
             loop do
                 loop do
-                    puts "Enter the coordinates of the piece you want to move e.g 'A1' or 'exit' to quit"
+                    puts "Enter the coordinates of the piece you want to move e.g 'A1' or 'exit' to quit or 'save' to save the game and leave"
                     input = gets.chomp
                     start = Board.convert_to_index(input)
                     valide_move = @board.valide_move(start)
@@ -89,16 +88,42 @@ class Game
                 puts "white king is in check"   
             end
         end
-        rescue RuntimeError => e
-            puts e.message
+    end   
+end
+class Save 
+    attr_accessor :board
+    def initialize(board)
+        @board = board
+    end
+    def save_game
+        puts "enter the name of the file"
+        file_name = gets.chomp
+        Dir.mkdir('save') unless Dir.exist?('save')
+        File.open("./save/"+file_name+".yaml", "w") do |file|
+            file.puts YAML::dump(@board)
         end
+    end
 
+    def display_saved_game_names
+        puts "saved games"
+        Dir.glob("./save/*.yaml") do |file|
+            puts file
+        end
+    end
 
-
-
-    end 
-                                          
-
+    def load_game
+        puts "enter the name of the file"
+        file_name = gets.chomp
+        if File.exist?("./save/"+file_name+".yaml")
+            file = File.open("./save/"+file_name+".yaml", "r")
+            loaded_board = YAML::load(file)
+            loaded_board.display_board
+            loaded_board
+        else
+            puts "No saved game found with that name."
+            nil
+        end
+    end
 end
 game = Game.new
 game.play  

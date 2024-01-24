@@ -288,12 +288,5 @@ class Board
 
 end
 
-board = Board.new
-board.grid[1][0] = " "
-board.grid[6][0] = " "
-board.grid[3][0] = "\u2659"
-board.grid[4][0] = "\u265F"
-board.display_board
 
-puts board.valide_move_rook([7,0]).inspect
 
