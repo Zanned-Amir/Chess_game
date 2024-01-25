@@ -7,6 +7,36 @@ This is a simple command-line Chess game implemented in Ruby.
 - `Player`: Represents a player in the game. Each player has a color (white or black).
 - `Game`: Controls the game flow. It initializes a new board, handles player turns, checks for valid moves, and determines the game outcome (check, checkmate, or stalemate).
 
+## Chess Board Display
+
+The chess board is displayed in the terminal after each player's turn. The board is an 8x8 grid, with each cell representing a square on the chess board. Each piece is represented by a specific character:
+
+- ♖, ♘, ♗, ♕, ♔, ♙ represent the white rook, knight, bishop, queen, king, and pawn respectively.
+- ♜, ♞, ♝, ♛, ♚, ♟ represent the black rook, knight, bishop, queen, king, and pawn respectively.
+
+Empty squares are represented by a blank space.
+
+Here's an example of what the board might look like at the start of the game:
+A B C D E F G H
+-----------------------------------
+1 | ♖ | ♘ | ♗ | ♕ | ♔ | ♗ | ♘ | ♖ | 1
+-----------------------------------
+2 | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | 2
+-----------------------------------
+3 | | | | | | | | | 3
+-----------------------------------
+4 | | | | | | | | | 4
+-----------------------------------
+5 | | | | | | | | | 5
+-----------------------------------
+6 | | | | | | | | | 6
+-----------------------------------
+7 | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | 7
+-----------------------------------
+8 | ♜ | ♞ | ♝ | ♛ | ♚ | ♝ | ♞ | ♜ | 8
+-----------------------------------
+A B C D E F G H
+
 ## How to Play
 
 1. Run `game.rb` to start a new game.
