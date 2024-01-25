@@ -17,8 +17,8 @@ The chess board is displayed in the terminal after each player's turn. The board
 Empty squares are represented by a blank space.
 
 Here's an example of what the board might look like at the start of the game:
-![Alt Text] (chess.png)
 
+![chess_board](chess.png)
 
 ## How to Play
 
