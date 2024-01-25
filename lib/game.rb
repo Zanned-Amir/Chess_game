@@ -1,4 +1,5 @@
 require_relative "board.rb"
+require_relative "save.rb"
 class Player
     def initialize(color)
         @color = color
@@ -16,13 +17,36 @@ class Game
         start =[]
         valide_move =[]
         puts"welcome to chess game"
-       @board.display_board     
+        puts"wanna load a saved game ?"
+        puts"1- yes"
+        puts"2- no"
+        puts"3- delete a saved game"
+        input = gets.chomp
+        if input == "1"
+            save = Save.new(@board)
+            save.display_saved_game_names
+            save.load_game
+            @board = save.board
+        elsif input == "3"
+            save = Save.new(@board)
+            save.display_saved_game_names
+            save.delete_saved_game
+        else 
+            puts "we will play a new game"
+        end
+
+       @board.display_board 
        loop do
             puts" player 1  your turn color white"
             loop do
                 loop do
                     puts "Enter the coordinates of the piece you want to move e.g 'A1' or 'exit' to quit or 'save' to save the game"
                     input = gets.chomp
+                    if input == "save"
+                        save = Save.new(@board)
+                        save.save_game
+                        return 1
+                    end
                     start = Board.convert_to_index(input)
                     valide_move = @board.valide_move(start)
                     break if  Board.convert_to_index(input) != nil && @board.white_listed.include?(@board.grid[start[0]][start[1]]) && valide_move != []
@@ -59,6 +83,11 @@ class Game
                 loop do
                     puts "Enter the coordinates of the piece you want to move e.g 'A1' or 'exit' to quit or 'save' to save the game and leave"
                     input = gets.chomp
+                    if input == "save"
+                        save = Save.new(@board)
+                        save.save_game
+                        return 1
+                    end
                     start = Board.convert_to_index(input)
                     valide_move = @board.valide_move(start)
                     break if  Board.convert_to_index(input) != nil && @board.black_listed.include?(@board.grid[start[0]][start[1]]) && valide_move != []
@@ -89,41 +118,6 @@ class Game
             end
         end
     end   
-end
-class Save 
-    attr_accessor :board
-    def initialize(board)
-        @board = board
-    end
-    def save_game
-        puts "enter the name of the file"
-        file_name = gets.chomp
-        Dir.mkdir('save') unless Dir.exist?('save')
-        File.open("./save/"+file_name+".yaml", "w") do |file|
-            file.puts YAML::dump(@board)
-        end
-    end
-
-    def display_saved_game_names
-        puts "saved games"
-        Dir.glob("./save/*.yaml") do |file|
-            puts file
-        end
-    end
-
-    def load_game
-        puts "enter the name of the file"
-        file_name = gets.chomp
-        if File.exist?("./save/"+file_name+".yaml")
-            file = File.open("./save/"+file_name+".yaml", "r")
-            loaded_board = YAML::load(file)
-            loaded_board.display_board
-            loaded_board
-        else
-            puts "No saved game found with that name."
-            nil
-        end
-    end
 end
 game = Game.new
 game.play  
