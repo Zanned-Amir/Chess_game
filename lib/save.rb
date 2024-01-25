@@ -18,8 +18,20 @@ class Save
 
     def display_saved_game_names
         puts "Saved games:"
+        puts "-"*20
         Dir.glob("./save/*.json") do |file|
             puts file
+        end
+        puts "-"*20
+    end
+    def delete_saved_game
+        puts "Enter the name of the file"
+        file_name = gets.chomp
+        if File.exist?("./save/#{file_name}.json")
+            File.delete("./save/#{file_name}.json")
+        else
+            puts "No saved game found with that name."
+            nil
         end
     end
 
@@ -38,9 +50,3 @@ class Save
         end
     end
 end
-
-board = Board.new
-save = Save.new(board)
-save.save_game 
-save.display_saved_game_names
-save.load_game
