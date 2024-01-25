@@ -17,55 +17,8 @@ The chess board is displayed in the terminal after each player's turn. The board
 Empty squares are represented by a blank space.
 
 Here's an example of what the board might look like at the start of the game:
-A B C D E F G H
+![Alt Text] (chess.png)
 
----
-
-1 | ♖ | ♘ | ♗ | ♕ | ♔ | ♗ | ♘ | ♖ | 1
-
----
-
-2 | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | 2
-<<<<<<< HEAD
-
----
-
-3 | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | 3
-
----
-
-4 | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | 4
-
----
-
-5 | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | 5
-
----
-
-6 | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | 6
-
----
-
-=======
------------------------------------
-3 |   |   |   |   |   |   |   |   | 3
------------------------------------
-4 |   |   |   |   |   |   |   |   | 4
------------------------------------
-5 |   |   |   |   |   |   |   |   | 5
------------------------------------
-6 |   |   |   |   |   |   |   |   | 6
------------------------------------
->>>>>>> e5b2321c11c80f86ca44901e45b48e6f5cc026b8
-7 | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | 7
-
----
-
-8 | ♜ | ♞ | ♝ | ♛ | ♚ | ♝ | ♞ | ♜ | 8
-
----
-
-    A   B   C   D   E   F   G   H
 
 ## How to Play
 
