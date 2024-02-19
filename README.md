@@ -43,3 +43,6 @@ You can save the game at any point by typing 'save'. You can load a saved game a
 1. Clone this repository.
 2. Navigate to the repository directory.
 3. Run `ruby game.rb` to start the game.
+
+
+:)
